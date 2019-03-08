@@ -17,58 +17,61 @@ namespace Classificator
 {
     public class EnvironmentModel
     {
-        static readonly string _trainDataPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "environment-sensors-train.csv");
-        static readonly string _testDataPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "environment-sensors-test.csv");
-        static readonly string _modelPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "Model.zip");
+        private readonly string _modelPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "Model.zip");
 
-        private static MLContext _mlContext;
-        private static PredictionEngine<Models.Environment, EnvironmentPredicted> _predEngine;
-        private static ITransformer _trainedModel;
-        private static IDataView _trainingDataView;
+        private MLContext _mlContext;
+        private PredictionEngine<Models.Environment, EnvironmentPredicted> _predEngine;
+        private ITransformer _trainedModel;
+        private IDataView _trainingDataView;
 
         static TextLoader _textLoader;
 
         public EnvironmentModel()
         { 
             // Read the data from the file
-            MLContext mlContext = new MLContext(seed: 0);
-
-            _trainingDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(_trainDataPath);
-        }
-
-        public void InitializeTheContext()
-        {
+            _mlContext = new MLContext(seed: 0);
            
-            //Build the pipeline(Extracts and transforms the data.)
-            var pipeline = ProcessData();
-
-            //Build the training model
-            var trainingPipeline = BuildAndTrainModel(_trainingDataView, pipeline);
-
-            Evaluate();
-
-            PredictIssue();
-
-            //_textLoader = mlContext.Data.CreateTextLoader(new TextLoader.Options()
-            //{
-            //    Separators = new[] { ',' },
-            //    HasHeader = true,
-            //    Columns = new[]
-            //        {
-            //            new TextLoader.Column("Luminosity", DataKind.Double, 0),
-            //            new TextLoader.Column("Humidity", DataKind.Double, 1),
-            //            new TextLoader.Column("Temperature", DataKind.Double, 2),
-            //            new TextLoader.Column("NoiseLevel", DataKind.Double, 3),
-            //            new TextLoader.Column("EnvironmentState", DataKind.String, 4)
-            //        }
-            //});
-
-            //var model = Train(mlContext, _trainDataPath);
-            //Evaluate(mlContext, model);
-
         }
 
-        public static EstimatorChain<ColumnConcatenatingTransformer> ProcessData()
+        public void LoadDataFromFile(string trainDataPath)
+        {
+            _trainingDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(trainDataPath);
+        }
+
+        //public void PreprocessData(string trainDataPath)
+        //{
+
+            
+
+        //    //Build the pipeline(Extracts and transforms the data.)
+
+        //    //Build the training model
+        //    //var trainingPipeline = BuildAndTrainModel(_trainingDataView, pipeline);
+
+        //    //Evaluate();
+
+        //    //PredictIssue();
+
+        //    //_textLoader = mlContext.Data.CreateTextLoader(new TextLoader.Options()
+        //    //{
+        //    //    Separators = new[] { ',' },
+        //    //    HasHeader = true,
+        //    //    Columns = new[]
+        //    //        {
+        //    //            new TextLoader.Column("Luminosity", DataKind.Double, 0),
+        //    //            new TextLoader.Column("Humidity", DataKind.Double, 1),
+        //    //            new TextLoader.Column("Temperature", DataKind.Double, 2),
+        //    //            new TextLoader.Column("NoiseLevel", DataKind.Double, 3),
+        //    //            new TextLoader.Column("EnvironmentState", DataKind.String, 4)
+        //    //        }
+        //    //});
+
+        //    //var model = Train(mlContext, _trainDataPath);
+        //    //Evaluate(mlContext, model);
+
+        //}
+
+        public EstimatorChain<ColumnConcatenatingTransformer> PreProcessData()
         {
             EstimatorChain<ColumnConcatenatingTransformer> pipeline = _mlContext.Transforms.Conversion.MapValueToKey(inputColumnName: "EnvironmentState", outputColumnName: "Label")
                                         .Append(_mlContext.Transforms.Concatenate("Features", "Luminosity", "Humidity", "Temperature", "NoiseLevel"))
@@ -77,12 +80,15 @@ namespace Classificator
             return pipeline;
         }
 
-        public static EstimatorChain<KeyToValueMappingTransformer> BuildAndTrainModel(IDataView trainingDataView, EstimatorChain<ColumnConcatenatingTransformer> pipeline)
+        public EstimatorChain<KeyToValueMappingTransformer> BuildAndTrainModel(EstimatorChain<ColumnConcatenatingTransformer> pipeline)
         {
             var trainingPipeline = pipeline.Append(_mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, DefaultColumnNames.Features))
                                            .Append(_mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
-            _trainedModel = trainingPipeline.Fit(trainingDataView);
+            _trainedModel = trainingPipeline.Fit(_trainingDataView);
+
+            SaveModelAsFile(_mlContext, _trainedModel);
+
             _predEngine = _trainedModel.CreatePredictionEngine<Models.Environment, EnvironmentPredicted>(_mlContext);
 
             Models.Environment sensors = new Models.Environment()
@@ -99,11 +105,11 @@ namespace Classificator
             return trainingPipeline;
         }
 
-        public static void Evaluate()
+        public void Evaluate(string testDataPath, ITransformer trainedModel)
         {
-            var testDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(_testDataPath);
+            var testDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(testDataPath);
 
-            var testMetrics = _mlContext.MulticlassClassification.Evaluate(_trainedModel.Transform(testDataView));
+            var testMetrics = _mlContext.MulticlassClassification.Evaluate(trainedModel.Transform(testDataView));
 
             Console.WriteLine($"*************************************************************************************************************");
             Console.WriteLine($"*       Metrics for Multi-class Classification model - Test Data     ");
@@ -113,12 +119,10 @@ namespace Classificator
             Console.WriteLine($"*       LogLoss:          {testMetrics.LogLoss:#.###}");
             Console.WriteLine($"*       LogLossReduction: {testMetrics.LogLossReduction:#.###}");
             Console.WriteLine($"*************************************************************************************************************");
-
-            SaveModelAsFile(_mlContext, _trainedModel);
         }
 
         // Saves the model as a.zip file.
-        private static void SaveModelAsFile(MLContext mlContext, ITransformer model)
+        private void SaveModelAsFile(MLContext mlContext, ITransformer model)
         {
             using (var fs = new FileStream(_modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
@@ -127,7 +131,7 @@ namespace Classificator
             }
         }
 
-        private static void PredictIssue()
+        public ITransformer LoadModelFromFile()
         {
             ITransformer loadedModel;
             using (var stream = new FileStream(_modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -148,6 +152,8 @@ namespace Classificator
             var prediction = _predEngine.Predict(sensorsTest);
 
             Console.WriteLine($"=============== Single Prediction - Result: {prediction.EnvironmentState} ===============");
+
+            return loadedModel;
         }
 
             //public ITransformer Train(MLContext mlContext, string dataPath)

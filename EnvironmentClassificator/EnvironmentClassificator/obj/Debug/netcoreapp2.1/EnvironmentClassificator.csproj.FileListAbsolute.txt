@@ -9,3 +9,8 @@ D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassif
 D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\obj\Debug\netcoreapp2.1\EnvironmentClassificator.dll
 D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\obj\Debug\netcoreapp2.1\EnvironmentClassificator.pdb
 D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\obj\Debug\netcoreapp2.1\EnvironmentClassificator.csprojAssemblyReference.cache
+D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\bin\Debug\netcoreapp2.1\Classificator.dll
+D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\bin\Debug\netcoreapp2.1\Classificator.pdb
+D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\obj\Debug\netcoreapp2.1\EnvironmentClassificator.csproj.CopyComplete
+D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\bin\Debug\netcoreapp2.1\Data\environment-sensors-test.csv
+D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\bin\Debug\netcoreapp2.1\Data\environment-sensors-train.csv

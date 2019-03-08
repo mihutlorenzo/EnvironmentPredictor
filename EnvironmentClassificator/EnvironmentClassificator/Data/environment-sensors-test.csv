@@ -1,0 +1,5 @@
+﻿Luminosity,Humidity,Temperature,NoiseLevel,EnvironmentState
+90,46,30,12,LIGHT
+19,54,26,9,DARK
+9,50,20,5,DARK
+100,17,28,10,LIGHT

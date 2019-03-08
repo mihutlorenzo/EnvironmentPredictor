@@ -122,5 +122,3 @@ D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\
 D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Microsoft.Data.DataView.dll
 D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Microsoft.Data.DataView.xml
 D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.csprojAssemblyReference.cache
-D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Data\environment-sensors-test.csv
-D:\Repositories\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Data\environment-sensors-train.csv

@@ -10,6 +10,6 @@ namespace Classificator.Models
     class EnvironmentPredicted
     {
         [ColumnName("PredictedLabel")]
-        public float EnvironmentState;
+        public string EnvironmentState;
     }
 }
