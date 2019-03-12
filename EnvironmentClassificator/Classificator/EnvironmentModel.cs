@@ -9,6 +9,7 @@ using Microsoft.Data.DataView;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms;
+using System.Data;
 //using Microsoft.ML.Trainers;
 //using Microsoft.ML.Transforms.Conversions;
 //using Microsoft.ML.Transforms.Normalizers;
@@ -38,39 +39,6 @@ namespace Classificator
             _trainingDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(trainDataPath);
         }
 
-        //public void PreprocessData(string trainDataPath)
-        //{
-
-            
-
-        //    //Build the pipeline(Extracts and transforms the data.)
-
-        //    //Build the training model
-        //    //var trainingPipeline = BuildAndTrainModel(_trainingDataView, pipeline);
-
-        //    //Evaluate();
-
-        //    //PredictIssue();
-
-        //    //_textLoader = mlContext.Data.CreateTextLoader(new TextLoader.Options()
-        //    //{
-        //    //    Separators = new[] { ',' },
-        //    //    HasHeader = true,
-        //    //    Columns = new[]
-        //    //        {
-        //    //            new TextLoader.Column("Luminosity", DataKind.Double, 0),
-        //    //            new TextLoader.Column("Humidity", DataKind.Double, 1),
-        //    //            new TextLoader.Column("Temperature", DataKind.Double, 2),
-        //    //            new TextLoader.Column("NoiseLevel", DataKind.Double, 3),
-        //    //            new TextLoader.Column("EnvironmentState", DataKind.String, 4)
-        //    //        }
-        //    //});
-
-        //    //var model = Train(mlContext, _trainDataPath);
-        //    //Evaluate(mlContext, model);
-
-        //}
-
         public EstimatorChain<ColumnConcatenatingTransformer> PreProcessData()
         {
             EstimatorChain<ColumnConcatenatingTransformer> pipeline = _mlContext.Transforms.Conversion.MapValueToKey(inputColumnName: "EnvironmentState", outputColumnName: "Label")
@@ -79,6 +47,8 @@ namespace Classificator
 
             return pipeline;
         }
+
+
 
         public EstimatorChain<KeyToValueMappingTransformer> BuildAndTrainModel(EstimatorChain<ColumnConcatenatingTransformer> pipeline)
         {
@@ -103,6 +73,28 @@ namespace Classificator
             Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
 
             return trainingPipeline;
+        }
+
+        public void PredictOnTestData(string testDataPath, ITransformer trainedModel)
+        {
+            
+            var testDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(testDataPath);
+
+            IDataView Result = trainedModel.Transform(testDataView);
+
+            
+
+
+            Models.Environment sensors = new Models.Environment()
+            {
+                Luminosity = 85,
+                Humidity = 24,
+                NoiseLevel = 8,
+                Temperature = 27
+            };
+
+            var prediction = _predEngine.Predict(sensors);
+            Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
         }
 
         public void Evaluate(string testDataPath, ITransformer trainedModel)

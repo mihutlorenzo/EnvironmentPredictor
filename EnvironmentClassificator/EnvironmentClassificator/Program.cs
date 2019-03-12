@@ -5,6 +5,7 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms;
 
+
 namespace EnvironmentClassificator
 {
     class Program
@@ -20,7 +21,14 @@ namespace EnvironmentClassificator
             //model.LoadDataFromFile(_trainDataPath);
             //EstimatorChain<ColumnConcatenatingTransformer> pipeline = model.PreProcessData();
             //EstimatorChain<KeyToValueMappingTransformer> trainedPipeline = model.BuildAndTrainModel(pipeline);
-            model.Evaluate(_testDataPath,classificator);
+            model.PredictOnTestData(_testDataPath, classificator);
+            model.Evaluate(_testDataPath, classificator);
+
+            SerialInformation arduinoPort = new SerialInformation();
+            arduinoPort.GetPorts();
+            arduinoPort.ReadFromPort("portHere");
+            Console.ReadLine();
+            arduinoPort.Close();
         }
     }
 }

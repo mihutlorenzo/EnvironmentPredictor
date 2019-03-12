@@ -1,4 +1,7 @@
-#include <SimpleDHT.h>
+#include <DHT.h>
+#include <DHT_U.h>
+
+
 #define ON 1 //debug on
 #define OFF 0 //debug off
 
