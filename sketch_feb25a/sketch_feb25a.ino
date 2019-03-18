@@ -1,5 +1,6 @@
 
 #include <SimpleDHT.h>
+
 #define ON 1 //debug on
 #define OFF 0 //debug off
 
@@ -24,20 +25,27 @@ void loop() {
  uint8_t temperature, humidity,luminosity, sound;
  if(dht11.read(TEMPHUM,&temperature,&humidity,NULL)!=SimpleDHTErrSuccess){
   #if (DEBUG_MODE == ON)
-  Serial.println("Waiting for datas!");
+  // Serial.println("Waiting for datas!");
   #endif
   }else{
   luminosity=(100*analogRead(PHOTORESISTOR))/255;
   sound=analogRead(A0);//(100*analogRead(SOUNDPWM))/255;
   #if (DEBUG_MODE == ON)
-  Serial.print("Temperature = ");
+  /*Serial.print("Temperature = ");
   Serial.println(temperature);
   Serial.print("Humidity = ");
   Serial.println(humidity);
   Serial.print("Light =");
   Serial.println(luminosity); //0-100% light
   Serial.print("Sound=");
-  Serial.println(sound); //0-100% sound
+  Serial.println(sound); //0-100% sound*/
+  Serial.print(luminosity);
+  Serial.print(",");
+  Serial.print(humidity);
+  Serial.print(",");
+  Serial.print(temperature);
+  Serial.print(",");
+  Serial.print(sound);
   #endif
   
   }
