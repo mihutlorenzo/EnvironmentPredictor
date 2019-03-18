@@ -18,14 +18,14 @@ namespace Classificator
 {
     public class EnvironmentModel
     {
-        private readonly string _modelPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "Model.zip");
+        private readonly string _modelPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\Data\Model.zip";
 
         private MLContext _mlContext;
         private PredictionEngine<Models.Environment, EnvironmentPredicted> _predEngine;
         private ITransformer _trainedModel;
         private IDataView _trainingDataView;
 
-        static TextLoader _textLoader;
+        // static TextLoader _textLoader;
 
         public EnvironmentModel()
         { 
@@ -50,50 +50,48 @@ namespace Classificator
 
 
 
-        public EstimatorChain<KeyToValueMappingTransformer> BuildAndTrainModel(EstimatorChain<ColumnConcatenatingTransformer> pipeline)
+        public void BuildAndTrainModel(EstimatorChain<ColumnConcatenatingTransformer> pipeline)
         {
             var trainingPipeline = pipeline.Append(_mlContext.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(DefaultColumnNames.Label, DefaultColumnNames.Features))
                                            .Append(_mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
             _trainedModel = trainingPipeline.Fit(_trainingDataView);
 
-            SaveModelAsFile(_mlContext, _trainedModel);
-
             _predEngine = _trainedModel.CreatePredictionEngine<Models.Environment, EnvironmentPredicted>(_mlContext);
 
             Models.Environment sensors = new Models.Environment()
             {
-                Luminosity = 85,
-                Humidity = 24,
-                NoiseLevel = 8,
-                Temperature = 27
+                Luminosity = 155,
+                Humidity = 48,
+                Temperature = 28,
+                NoiseLevel = 160,
             };
 
             var prediction = _predEngine.Predict(sensors);
             Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
 
-            return trainingPipeline;
         }
 
-        public void PredictOnTestData(string testDataPath, ITransformer trainedModel)
+        public void PredictOnTestData(Models.Environment sensorsNewValue)
         {
-            
-            var testDataView = _mlContext.Data.CreateTextLoader<Models.Environment>(hasHeader: true, separatorChar: ',').Load(testDataPath);
+            //Models.Environment sensors = new Models.Environment()
+            //{
+            //    Luminosity = 85,
+            //    Humidity = 24,
+            //    NoiseLevel = 8,
+            //    Temperature = 27
+            //};
 
-            IDataView Result = trainedModel.Transform(testDataView);
+            //Models.Environment sensors = new Models.Environment()
+            //{
+            //    Luminosity = 155,
+            //    Humidity = 48,
+            //    Temperature = 28,
+            //    NoiseLevel = 160,
+            //};
 
-            
+            var prediction = _predEngine.Predict(sensorsNewValue);
 
-
-            Models.Environment sensors = new Models.Environment()
-            {
-                Luminosity = 85,
-                Humidity = 24,
-                NoiseLevel = 8,
-                Temperature = 27
-            };
-
-            var prediction = _predEngine.Predict(sensors);
             Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
         }
 
@@ -114,38 +112,36 @@ namespace Classificator
         }
 
         // Saves the model as a.zip file.
-        private void SaveModelAsFile(MLContext mlContext, ITransformer model)
+        public void SaveModelAsFile()
         {
             using (var fs = new FileStream(_modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
-                mlContext.Model.Save(model, fs);
+                _mlContext.Model.Save(_trainedModel, fs);
                 Console.WriteLine("The model is saved to {0}", _modelPath);
             }
         }
 
-        public ITransformer LoadModelFromFile()
+        public void LoadModelFromFile()
         {
-            ITransformer loadedModel;
+            // ITransformer loadedModel;
             using (var stream = new FileStream(_modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                loadedModel = _mlContext.Model.Load(stream);
+                _trainedModel = _mlContext.Model.Load(stream);
             }
 
-            Models.Environment sensorsTest = new Models.Environment()
-            {
-                Luminosity = 20,
-                Humidity = 24,
-                NoiseLevel = 8,
-                Temperature = 27
-            };
+            //Models.Environment sensorsTest = new Models.Environment()
+            //{
+            //    Luminosity = 20,
+            //    Humidity = 24,
+            //    NoiseLevel = 8,
+            //    Temperature = 27
+            //};
 
-            _predEngine = loadedModel.CreatePredictionEngine<Models.Environment, EnvironmentPredicted>(_mlContext);
+            _predEngine = _trainedModel.CreatePredictionEngine<Models.Environment, EnvironmentPredicted>(_mlContext);
 
-            var prediction = _predEngine.Predict(sensorsTest);
+            // var prediction = _predEngine.Predict(sensorsTest);
 
-            Console.WriteLine($"=============== Single Prediction - Result: {prediction.EnvironmentState} ===============");
-
-            return loadedModel;
+            // Console.WriteLine($"=============== Single Prediction - Result: {prediction.EnvironmentState} ===============");
         }
 
             //public ITransformer Train(MLContext mlContext, string dataPath)

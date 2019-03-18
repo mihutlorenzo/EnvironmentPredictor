@@ -7,7 +7,7 @@ using Microsoft.ML.Data;
 
 namespace Classificator.Models
 {
-    class EnvironmentPredicted
+    public class EnvironmentPredicted
     {
         [ColumnName("PredictedLabel")]
         public string EnvironmentState;

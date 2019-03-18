@@ -84,11 +84,20 @@
     <Compile Include="EnvironmentModel.cs" />
     <Compile Include="Models\Environment.cs" />
     <Compile Include="Models\EnvironmentPredicted.cs" />
+    <Compile Include="ProcessData\DataWriterToCsv.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProcessData\SerialPortReader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\environment-sensors-test.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\environment-sensors-train.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

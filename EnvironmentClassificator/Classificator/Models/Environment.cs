@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Classificator.Models
 {
-    class Environment
+    public class Environment
     {
         [LoadColumn(0)]
         public float Luminosity;

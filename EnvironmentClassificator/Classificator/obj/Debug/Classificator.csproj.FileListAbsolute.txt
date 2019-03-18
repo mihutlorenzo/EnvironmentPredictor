@@ -242,8 +242,10 @@ E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificat
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Microsoft.ML.Transforms.xml
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\System.Collections.Immutable.xml
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\System.ComponentModel.Annotations.xml
-E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.csprojAssemblyReference.cache
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.csproj.CoreCompileInputs.cache
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.csproj.CopyComplete
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.dll
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.pdb
+E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Data\environment-sensors-test.csv
+E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Data\environment-sensors-train.csv
+E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.csprojAssemblyReference.cache
