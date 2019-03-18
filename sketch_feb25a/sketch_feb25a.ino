@@ -1,3 +1,4 @@
+
 #include <SimpleDHT.h>
 #define ON 1 //debug on
 #define OFF 0 //debug off
@@ -8,7 +9,7 @@
 #define SOUNDANALOG 3 //A7 nano
 #define SOUNDPWM A0
 #define TEMPHUM A3 //a5 nano*
-SimpleDHT11 dht11(TEMPHUM);//special classs for dht11
+SimpleDHT11 dht11(TEMPHUM); //special classs for dht11
 
 
 
