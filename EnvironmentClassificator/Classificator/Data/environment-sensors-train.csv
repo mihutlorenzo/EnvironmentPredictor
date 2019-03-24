@@ -8,3 +8,14 @@
 15,39,23,9,DARK
 0,30,15,5,DARK
 12,34,25,5,DARK
+
+id="ridicareDinMagazin"
+id="livrarePrinCurier"
+
+name="deliveryMethod"
+
+value="Pick up from store"
+value="Currier delivery"
+
+[checked]="deliveryMode === 'Currier delivery'"
+[checked]="deliveryMode === 'On store delivery'"
