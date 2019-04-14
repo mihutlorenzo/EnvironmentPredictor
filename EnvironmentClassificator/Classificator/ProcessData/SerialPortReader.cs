@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Classificator.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Classificator.ProcessData
@@ -14,6 +16,8 @@ namespace Classificator.ProcessData
         public volatile static string environmentValue;
         IList<string> serialDataForTrain;
         private EnvironmentModel classifier;
+        private Thread _threadReadTrainingData;
+        private Thread _threadReadTestData;
 
         public SerialPortReader(string defaultEnvironmentValue, string portName)
         {
@@ -29,6 +33,32 @@ namespace Classificator.ProcessData
             };
 
             serialDataForTrain = new List<string>();
+
+            
+            
+        }
+
+
+        public void ThreadStartReadingTrainingData()
+        {
+            _threadReadTrainingData = new Thread(new ThreadStart(ReadFromPort));
+            _threadReadTrainingData.Start();
+        }
+
+        public void ThreadStartReadingTestingData()
+        {
+            _threadReadTestData = new Thread(new ThreadStart(ReadValuesToPredict));
+            _threadReadTestData.Start();
+        }
+
+        public void ThreadStopReadingTrainingData()
+        {
+            _threadReadTrainingData.Join();
+        }
+
+        public void ThreadStopReadingTestingData()
+        {
+            _threadReadTestData.Join();
         }
 
         public void GetPorts()
@@ -40,11 +70,15 @@ namespace Classificator.ProcessData
                 Console.WriteLine(portName);
             }
         }
-        
-        public void ReadValuesToPredict(EnvironmentModel createdModel)
+
+        public void SetUpPredictorModel(EnvironmentModel createdModel)
         {
             classifier = createdModel;
-
+        }
+        
+        public void ReadValuesToPredict()
+        {
+            
             if (!_arduinoPort.IsOpen)
             {
                 _arduinoPort.Open();
@@ -78,18 +112,21 @@ namespace Classificator.ProcessData
                     NoiseLevel = nois,
                 };
 
-                classifier.PredictOnTestData(readData);
+                PredictedValue = classifier.PredictOnTestData(readData);
             }
         }
 
+        public EnvironmentPredicted PredictedValue { get; set; }
+
         public void CloseAfterPredict()
         {
+            _arduinoPort.DataReceived -= SerialPortDataReceivedToPredict;
             _arduinoPort.Close();
         }
 
 
 
-        public void ReadFromPort()
+        private void ReadFromPort()
         {
             // Open the port
             if (!_arduinoPort.IsOpen)
@@ -106,7 +143,7 @@ namespace Classificator.ProcessData
             var serialPort = (SerialPort)sender;
 
             // Read the data that is in the serial buffer
-            var serialData = serialPort.ReadExisting();
+            var serialData = serialPort.ReadExisting(); 
 
             if(serialData != string.Empty)
             {
@@ -120,6 +157,7 @@ namespace Classificator.ProcessData
         {
             _arduinoPort.Close();
             DataWriterToCsv.WriteTrainDataToCsv(serialDataForTrain);
+            _arduinoPort.DataReceived -= SerialPortDataReceived;
             serialDataForTrain.Clear();
         }
 

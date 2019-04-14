@@ -14,16 +14,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = (Button) findViewById(R.id.button);
+        button = (Button) findViewById(R.id.gatherTrainingData);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openActivity2();
+                openCollectTrainingDataActivity();
             }
         });
     }
-    public void openActivity2(){
-        Intent intent = new Intent(this, Activity2.class);
+    public void openCollectTrainingDataActivity(){
+        Intent intent = new Intent(this, CollectTrainingDataActivity.class);
         startActivity(intent);
     }
 }

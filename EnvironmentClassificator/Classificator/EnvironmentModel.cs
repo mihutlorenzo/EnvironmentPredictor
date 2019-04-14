@@ -57,22 +57,22 @@ namespace Classificator
 
             _trainedModel = trainingPipeline.Fit(_trainingDataView);
 
-            _predEngine = _trainedModel.CreatePredictionEngine<Models.Environment, EnvironmentPredicted>(_mlContext);
+            //_predEngine = _trainedModel.CreatePredictionEngine<Models.Environment, EnvironmentPredicted>(_mlContext);
 
-            Models.Environment sensors = new Models.Environment()
-            {
-                Luminosity = 155,
-                Humidity = 48,
-                Temperature = 28,
-                NoiseLevel = 160,
-            };
+            //Models.Environment sensors = new Models.Environment()
+            //{
+            //    Luminosity = 155,
+            //    Humidity = 48,
+            //    Temperature = 28,
+            //    NoiseLevel = 160,
+            //};
 
-            var prediction = _predEngine.Predict(sensors);
-            Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
+            //var prediction = _predEngine.Predict(sensors);
+            //Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
 
         }
 
-        public void PredictOnTestData(Models.Environment sensorsNewValue)
+        public EnvironmentPredicted PredictOnTestData(Models.Environment sensorsNewValue)
         {
             //Models.Environment sensors = new Models.Environment()
             //{
@@ -92,7 +92,8 @@ namespace Classificator
 
             var prediction = _predEngine.Predict(sensorsNewValue);
 
-            Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
+            //Console.WriteLine($"============= Single Prediction just-trained-model - Result: {prediction.EnvironmentState}");
+            return prediction;
         }
 
         public void Evaluate(string testDataPath, ITransformer trainedModel)
@@ -117,7 +118,7 @@ namespace Classificator
             using (var fs = new FileStream(_modelPath, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
                 _mlContext.Model.Save(_trainedModel, fs);
-                Console.WriteLine("The model is saved to {0}", _modelPath);
+                //Console.WriteLine("The model is saved to {0}", _modelPath);
             }
         }
 

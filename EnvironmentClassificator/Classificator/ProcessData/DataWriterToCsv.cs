@@ -12,8 +12,11 @@ namespace Classificator.ProcessData
         //static readonly string _trainDataPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "environment-sensors-train.csv");
         //static readonly string _testDataPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "environment-sensors-test.csv");
 
-        public static readonly string _trainDataPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\Data\environment-sensors-train.csv";
-        static readonly string _testDataPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\Data\environment-sensors-test.csv";
+        //public static readonly string _trainDataPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\Data\environment-sensors-train.csv";
+        //static readonly string _testDataPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\EnvironmentClassificator\Data\environment-sensors-test.csv";
+
+        public static readonly string _trainDataPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\Data\environment-sensors-train.csv";
+        static readonly string _testDataPath = @"E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\Data\environment-sensors-test.csv";
 
         static readonly string firstLine = "Luminosity,Humidity,Temperature,NoiseLevel,EnvironmentState";
 

@@ -74,5 +74,5 @@ void loop() {
     Serial.println("Sound sent!");
     #endif
   }
-  delay(1000);
+  delay(5000);
 }

@@ -54,8 +54,9 @@ namespace EnvironmentClassificator
                 {
                     case 1:
                         int environmentValue = 999;
-                        Thread serialPortReadThread = new Thread(new ThreadStart(arduinoPort.ReadFromPort));
-                        serialPortReadThread.Start();
+                        //Thread serialPortReadThread = new Thread(new ThreadStart(arduinoPort.ReadFromPort));
+                        //serialPortReadThread.Start();
+                        arduinoPort.ThreadStartReadingTrainingData();
                         do
                         {
                             Console.WriteLine("1. LIGHT" + Environment.NewLine +
@@ -89,7 +90,8 @@ namespace EnvironmentClassificator
                         } while (environmentValue != 9) ;
 
                         arduinoPort.Close();
-                        serialPortReadThread.Join();
+                        //serialPortReadThread.Join();
+                        arduinoPort.ThreadStopReadingTrainingData();
 
                         break;
                     case 2:
@@ -103,9 +105,19 @@ namespace EnvironmentClassificator
                     case 3:
                         EnvironmentModel createdModel = new EnvironmentModel();
                         createdModel.LoadModelFromFile();
-                        arduinoPort.ReadValuesToPredict(createdModel);
-                        Console.ReadLine();
-                        arduinoPort.CloseAfterPredict();
+                        arduinoPort.SetUpPredictorModel(createdModel);
+
+                        arduinoPort.ThreadStartReadingTestingData();
+
+                        int readValue = 999;
+                        do
+                        {
+                            Console.WriteLine("Press 5 to exit!");
+                            int.TryParse(Console.ReadLine(), out readValue);
+                        } while (readValue != 5);
+                        
+                            arduinoPort.CloseAfterPredict();
+                            arduinoPort.ThreadStopReadingTestingData();
                         // Code for predictions goes here
                         break;
                     case 4:

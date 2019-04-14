@@ -248,4 +248,3 @@ E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificat
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.pdb
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Data\environment-sensors-test.csv
 E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\bin\Debug\Data\environment-sensors-train.csv
-E:\Repositories\Github\EnvironmentPredictor\EnvironmentClassificator\Classificator\obj\Debug\Classificator.csprojAssemblyReference.cache

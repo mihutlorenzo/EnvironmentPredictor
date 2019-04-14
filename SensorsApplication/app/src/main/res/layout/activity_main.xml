@@ -20,46 +20,57 @@
         android:text="Activity 1" />
 
     <Button
-        android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="154dp"
-        android:layout_height="58dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="132dp"
-        android:layout_marginBottom="449dp"
-        android:text="Gather Data" />
-
-    <Button
-        android:id="@+id/button1"
+        android:id="@+id/gatherTrainingData"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="148dp"
         android:layout_height="64dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="132dp"
-        android:layout_marginBottom="318dp"
+        android:layout_marginEnd="134dp"
+        android:layout_marginBottom="450dp"
+        android:text="Gather Training Data" />
+
+    <Button
+        android:id="@+id/buildModel"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="148dp"
+        android:layout_height="64dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="134dp"
+        android:layout_marginBottom="360dp"
         android:text="Build Model" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/deleteTrainingData"
         style="@style/Widget.AppCompat.Button"
-        android:layout_width="142dp"
-        android:layout_height="74dp"
+        android:layout_width="148dp"
+        android:layout_height="64dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="134dp"
-        android:layout_marginBottom="194dp"
-        android:text="START Prediction" />
+        android:layout_marginBottom="270dp"
+        android:text="Delete training data" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/startPredicting"
         style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="75dp"
+        android:layout_width="148dp"
+        android:layout_height="64dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="134dp"
-        android:layout_marginBottom="71dp"
-        android:text="STOP Prediction" />
+        android:layout_marginBottom="180dp"
+        android:text="Start Predicting" />
+
+    <Button
+        android:id="@+id/stopPredicting"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="148dp"
+        android:layout_height="64dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="134dp"
+        android:layout_marginBottom="90dp"
+        android:text="Stop Predicting" />
 </RelativeLayout>
