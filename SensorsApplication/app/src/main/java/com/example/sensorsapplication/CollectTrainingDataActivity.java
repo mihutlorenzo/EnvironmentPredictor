@@ -4,16 +4,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class CollectTrainingDataActivity extends AppCompatActivity {
-    private ToggleButton togglebutton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collect_training_data);
-        togglebutton = (ToggleButton) findViewById(R.id.togglebutton);
+        ((RadioGroup) findViewById(R.id.toggleGroup)).setOnCheckedChangeListener(ToggleListener);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -54,16 +54,39 @@ public class CollectTrainingDataActivity extends AppCompatActivity {
                 if (checked)
                     // Ninjas rule
                     break;
+            default:
+                break;
         }
     }
 
-    public void toggleClick(View v){
-        if(togglebutton.isChecked()) {
-            togglebutton.setText("Stop Collecting Training Data");
+    static final RadioGroup.OnCheckedChangeListener ToggleListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(final RadioGroup radioGroup, final int i) {
+            for (int j = 0; j < radioGroup.getChildCount(); j++) {
+                final ToggleButton view = (ToggleButton) radioGroup.getChildAt(j);
+                view.setChecked(view.getId() == i);
+            }
         }
-        else{
-            togglebutton.setText("Collect Training Data");
+    };
+
+    public void onToggle(View view) {
+        ((RadioGroup)view.getParent()).check(view.getId());
+        boolean checked = ((ToggleButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.startGatheringTrainingData:
+                if (checked)
+                    // Pirates are the best
+                    break;
+            case R.id.stopGatheringTrainingData:
+                if (checked)
+                    // Ninjas rule
+                    break;
+            default:
+                break;
         }
     }
+
 
 }

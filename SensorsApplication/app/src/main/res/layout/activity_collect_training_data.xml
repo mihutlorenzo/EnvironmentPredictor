@@ -15,6 +15,35 @@
         android:layout_marginBottom="580dp"
         android:text="Gathering Data" />
 
+    <RadioGroup android:id="@+id/toggleGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        >
+
+        <ToggleButton android:id="@+id/startGatheringTrainingData"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textOn="Start gathering data"
+            android:textOff="Start gathering data"
+            android:onClick="onToggle"
+            android:checked="true"
+            />
+        <ToggleButton android:id="@+id/stopGatheringTrainingData"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textOn="Stop gathering data"
+            android:textOff="Stop gathering data"
+            android:onClick="onToggle"
+            />
+    </RadioGroup>
+
+
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,16 +108,4 @@
             android:onClick="onRadioButtonClicked"
             android:text="Quiet" />
     </RadioGroup>
-
-    <ToggleButton
-        android:id="@+id/togglebutton"
-        android:layout_width="148dp"
-        android:layout_height="64dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="134dp"
-        android:layout_marginBottom="180dp"
-        android:checked="false"
-        android:text="Collect Training Data"
-        android:onClick="toggleClick" />
 </RelativeLayout>
