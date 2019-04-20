@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Classificator.ProcessData;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EnvironmentPredictor.API.Controllers
 {
@@ -22,9 +24,9 @@ namespace EnvironmentPredictor.API.Controllers
         [HttpGet("startGatheringTrainingData")]
         public IActionResult StartGatherTrainingData()
         {
-
             _arduinoPort.ThreadStartReadingTrainingData();
-            return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject("Process of gathering training data have been started");
+            return Ok(messageToReturn);
         }
 
         [HttpGet("writeEnvironmentState/{state}")]
@@ -32,10 +34,11 @@ namespace EnvironmentPredictor.API.Controllers
         {
             if (SerialPortReader.environmentValue != state)
             {
-                 SerialPortReader.environmentValue = state;
+                SerialPortReader.environmentValue = state;
             }
 
-            return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject(String.Format("Environment state have been changed to {0}", SerialPortReader.environmentValue));
+            return Ok(messageToReturn);
         }
 
         [HttpGet("stopGatheringTrainingData")]
@@ -44,7 +47,8 @@ namespace EnvironmentPredictor.API.Controllers
 
             _arduinoPort.Close();
             _arduinoPort.ThreadStopReadingTrainingData();
-            return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject("Process of gathering training data have been stoped");
+            return Ok(messageToReturn);
         }
     }
 }

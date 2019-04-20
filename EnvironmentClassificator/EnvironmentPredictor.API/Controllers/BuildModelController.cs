@@ -2,6 +2,7 @@
 using Classificator.ProcessData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,9 @@ namespace EnvironmentPredictor.API.Controllers
             model.BuildAndTrainModel(pipeline);
             model.SaveModelAsFile();
 
-            return NoContent();
+            //return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject("Model have been built!");
+            return Ok(messageToReturn);
         }
 
         [HttpGet("deleteTrainingData")]
@@ -38,7 +41,9 @@ namespace EnvironmentPredictor.API.Controllers
         {
             DataWriterToCsv.RemoveRowsFromCsv(DataWriterToCsv._trainDataPath);
 
-            return NoContent();
+            //return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject("Training data have been deleted!");
+            return Ok(messageToReturn);
         }
     }
 }

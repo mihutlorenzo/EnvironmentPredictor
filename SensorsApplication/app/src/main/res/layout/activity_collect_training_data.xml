@@ -30,7 +30,6 @@
             android:textOn="Start gathering data"
             android:textOff="Start gathering data"
             android:onClick="onToggle"
-            android:checked="true"
             />
         <ToggleButton android:id="@+id/stopGatheringTrainingData"
             android:layout_height="wrap_content"
@@ -40,6 +39,7 @@
             android:textOn="Stop gathering data"
             android:textOff="Stop gathering data"
             android:onClick="onToggle"
+            android:checked="true"
             />
     </RadioGroup>
 
@@ -95,11 +95,11 @@
             android:text="Cold" />
 
         <RadioButton
-            android:id="@+id/noice"
+            android:id="@+id/noise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onRadioButtonClicked"
-            android:text="Noice" />
+            android:text="Noise" />
 
         <RadioButton
             android:id="@+id/quiet"

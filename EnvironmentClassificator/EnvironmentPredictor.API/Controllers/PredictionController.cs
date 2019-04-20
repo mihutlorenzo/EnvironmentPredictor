@@ -1,6 +1,7 @@
 ﻿using Classificator;
 using Classificator.ProcessData;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,16 @@ namespace EnvironmentPredictor.API.Controllers
             _arduinoPort.SetUpPredictorModel(createdModel);
             _arduinoPort.ThreadStartReadingTestingData();
 
-            return NoContent();
+            //return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject("Process of gathering test data have been started");
+            return Ok(messageToReturn);
         }
 
         [HttpGet("getPredictedValue")]
-        public ActionResult<string> GetPredictedValue(string state)
+        public IActionResult GetPredictedValue(string state)
         {
-            return _arduinoPort.PredictedValue.EnvironmentState;
+            string messageToReturn = JsonConvert.SerializeObject(_arduinoPort.PredictedValue.EnvironmentState);
+            return Ok(messageToReturn);
         }
 
         [HttpGet("stopPredictingOnTestData")]
@@ -42,7 +46,9 @@ namespace EnvironmentPredictor.API.Controllers
 
             _arduinoPort.CloseAfterPredict();
             _arduinoPort.ThreadStopReadingTestingData();
-            return NoContent();
+            string messageToReturn = JsonConvert.SerializeObject("Process of gathering test data have been started");
+            return Ok(messageToReturn);
+
         }
     }
 }
