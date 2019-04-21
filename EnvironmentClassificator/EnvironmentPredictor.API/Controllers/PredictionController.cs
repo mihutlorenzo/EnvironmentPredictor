@@ -46,7 +46,7 @@ namespace EnvironmentPredictor.API.Controllers
 
             _arduinoPort.CloseAfterPredict();
             _arduinoPort.ThreadStopReadingTestingData();
-            string messageToReturn = JsonConvert.SerializeObject("Process of gathering test data have been started");
+            string messageToReturn = JsonConvert.SerializeObject("Process of gathering test data have been stopped");
             return Ok(messageToReturn);
 
         }

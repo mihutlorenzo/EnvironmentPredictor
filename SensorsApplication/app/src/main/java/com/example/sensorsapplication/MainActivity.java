@@ -1,6 +1,12 @@
 package com.example.sensorsapplication;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Button deleteTrainingDataButton;
     private Button startPredictionButton;
     private Button stopPredictionButton;
-    private Button getPredictedValuesButton;
+   // private Button getPredictedValuesButton;
 
     ApiInterface apiService;
     Call<String> callBuildModel;
@@ -26,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     Call<String> callStartPrediction;
     Call<String> callStopPrediction;
     Call<String> callGetPredictedValue;
+
+    String predictedValue = null;
+    Thread predictionThread;
+    boolean running = false;
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -76,13 +87,74 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getPredictedValuesButton = (Button) findViewById(R.id.getPredicted);
-        getPredictedValuesButton.setOnClickListener(new View.OnClickListener() {
+        //getPredictedValuesButton = (Button) findViewById(R.id.getPredicted);
+        //getPredictedValuesButton.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            //public void onClick(View v) {
+             //   getPrediction();
+            //}
+        //});
+
+        predictionThread = new Thread() {
             @Override
-            public void onClick(View v) {
-                getPrediction();
+            public void run() {
+                while(running){
+                    try{
+                        Thread.sleep(5000);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                callGetPredictedValue = apiService.GetPredictedValue();
+                                callGetPredictedValue.enqueue(new Callback<String>() {
+                                    @Override
+                                    public void onResponse(Call<String>call, Response<String> response) {
+                                        String messageFromServer = response.body();
+                                        Log.d(TAG, "Predicted value have been retrieved: " + messageFromServer);
+                                        //Toast.makeText(MainActivity.this, messageFromServer, Toast.LENGTH_LONG).show();
+                                        //Get an instance of NotificationManager//
+                                        System.out.println(predictedValue);
+                                        if(!messageFromServer.equals(predictedValue)){
+                                            System.out.println("Condition"+messageFromServer.equals(predictedValue));
+                                            predictedValue = messageFromServer;
+                                            Notification.Builder mBuilder =
+                                                    new Notification.Builder(MainActivity.this)
+                                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                                            .setContentTitle("Predicted value changed!")
+                                                            .setContentText(predictedValue);
+
+
+                                            // Gets an instance of the NotificationManager service//
+
+                                            NotificationManager mNotificationManager =
+
+                                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                                            // When you issue multiple notifications about the same type of event,
+                                            // it’s best practice for your app to try to update an existing notification
+                                            // with this new information, rather than immediately creating a new notification.
+                                            // If you want to update this notification at a later date, you need to assign it an ID.
+                                            // You can then use this ID whenever you issue a subsequent notification.
+                                            // If the previous notification is still visible, the system will update this existing notification,
+                                            // rather than create a new one. In this example, the notification’s ID is 001//
+
+                                            mNotificationManager.notify(001, mBuilder.build());
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<String>call, Throwable t) {
+                                        // Log error here since request failed
+                                        Log.e(TAG, t.toString());
+                                    }
+                                });
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        });
+        };
     }
     public void openCollectTrainingDataActivity(){
         Intent intent = new Intent(this, CollectTrainingDataActivity.class);
@@ -133,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
                 String messageFromServer = response.body();
                 Log.d(TAG, "Process of prediction have been started: " + messageFromServer);
                 Toast.makeText(MainActivity.this, messageFromServer, Toast.LENGTH_LONG).show();
+                predictionThread.start();
+                running = true;
             }
 
             @Override
@@ -149,8 +223,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String>call, Response<String> response) {
                 String messageFromServer = response.body();
-                Log.d(TAG, "Process of prediction have been stoped: " + messageFromServer);
+                Log.d(TAG, "Process of prediction have been stopped: " + messageFromServer);
                 Toast.makeText(MainActivity.this, messageFromServer, Toast.LENGTH_LONG).show();
+                running = false;
             }
 
             @Override
@@ -161,14 +236,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getPrediction() {
+    /*ublic void getPrediction() {
         callGetPredictedValue = apiService.GetPredictedValue();
         callGetPredictedValue.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String>call, Response<String> response) {
                 String messageFromServer = response.body();
                 Log.d(TAG, "Predicted value have been retrieved: " + messageFromServer);
-                Toast.makeText(MainActivity.this, messageFromServer, Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, messageFromServer, Toast.LENGTH_LONG).show();
+                //Get an instance of NotificationManager//
+
+                Notification.Builder mBuilder =
+                        new Notification.Builder(MainActivity.this)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle("Predicted value changed!")
+                                .setContentText(messageFromServer);
+
+
+                // Gets an instance of the NotificationManager service//
+
+                NotificationManager mNotificationManager =
+
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                // When you issue multiple notifications about the same type of event,
+                // it’s best practice for your app to try to update an existing notification
+                // with this new information, rather than immediately creating a new notification.
+                // If you want to update this notification at a later date, you need to assign it an ID.
+                // You can then use this ID whenever you issue a subsequent notification.
+                // If the previous notification is still visible, the system will update this existing notification,
+                // rather than create a new one. In this example, the notification’s ID is 001//
+
+                mNotificationManager.notify(001, mBuilder.build());
             }
 
             @Override
@@ -177,5 +276,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, t.toString());
             }
         });
-    }
+    }*/
 }
